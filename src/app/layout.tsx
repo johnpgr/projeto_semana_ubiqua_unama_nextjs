@@ -6,8 +6,6 @@ import { IBM_Plex_Sans } from 'next/font/google'
 import { Arimo } from 'next/font/google'
 import './globals.css'
 
-export const runtime = "nodejs"
-
 export const metadata: Metadata = {
     title: 'Sabores da Amazônia',
     description: 'Trabalho semana ubiqua UNAMA',
