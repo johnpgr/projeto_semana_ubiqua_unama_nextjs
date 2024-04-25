@@ -7,8 +7,10 @@ import { users } from '@/server/db/schema'
 import { lucia, authedRequest } from '@/server/auth'
 import { cookies } from 'next/headers'
 import { eq } from 'drizzle-orm'
-import {hash,verify} from 'argon2'
+import { Bcrypt } from 'oslo/password'
 import { SESSION_DURATION_SECONDS } from '@/consts'
+
+const bcrypt = new Bcrypt()
 
 export const signUpAction = async (values: {
     username: string
@@ -21,7 +23,7 @@ export const signUpAction = async (values: {
             error: res.error.message,
         }
     }
-    const hashedPassword = await hash(values.password)
+    const hashedPassword = await bcrypt.hash(values.password)
     const userId = generateId(24)
 
     try {
@@ -29,7 +31,7 @@ export const signUpAction = async (values: {
             .insert(users)
             .values({
                 id: userId,
-				email: values.email,
+                email: values.email,
                 username: values.username,
                 hashedPassword,
             })
@@ -83,7 +85,7 @@ export const signInAction = async (values: {
         }
     }
 
-    const passwordMatches = await verify(
+    const passwordMatches = await bcrypt.verify(
         existingUser.hashedPassword,
         values.password,
     )
