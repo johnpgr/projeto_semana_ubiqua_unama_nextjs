@@ -1,13 +1,14 @@
 import { db } from "../db";
 import { CommentSelect, ProductSelect } from "../db/schema";
 
-export type GetAllProductsQuery = (ProductSelect & { comments: Pick<CommentSelect, "content" | "userId" | "createdAt">[], rating: number })[]
+export type GetAllProductsQuery = (ProductSelect & { comments: Omit<CommentSelect, "productId">[], rating: number })[]
 
 export async function getAllProducts(): Promise<GetAllProductsQuery> {
 	const productsRaw = await db.query.products.findMany({
 		with: {
 			comments: {
 				columns: {
+					id: true,
 					content: true,
 					userId: true,
 					createdAt: true

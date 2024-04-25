@@ -28,7 +28,7 @@ export function ProductModal(props: {
                     <div className="grid gap-6">
                         <div className="grid gap-2">
                             <div className="flex items-center gap-1 text-sm">
-                                <span className="font-bold text-2xl">R$ {props.product.price / 10}</span>
+                                <span className="font-bold text-2xl">R$ {String(props.product.price / 10).replace('.', ',')}</span>
                             </div>
                             <ProductRating rating={props.product.rating} />
                         </div>
@@ -40,13 +40,13 @@ export function ProductModal(props: {
                                 <Button variant="outline">Adicionar ao carrinho</Button>
                                 <Button>Comprar agora</Button>
                             </div>
-                       </div>
+                        </div>
                     </div>
                 </div>
                 <div className="flex flex-col">
                     <h2 className="text-xl font-semibold mb-2">Comentários ({props.product.comments.length})</h2>
                     <div className="flex flex-col gap-4 max-h-[200px] h-full overflow-y-scroll overflow-x-hidden">
-                        {props.product.comments.map((comment) => <ProductComment comment={comment} />)}
+                        {props.product.comments.map((comment) => <ProductComment key={comment.id} comment={comment} />)}
                     </div>
                     <div className="grid gap-2 mt-2">
                         <Label className="text-base" htmlFor="comment">
