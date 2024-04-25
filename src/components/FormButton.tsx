@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button'
 import { useFormStatus } from 'react-dom'
 
 export function FormButton(props: {
+    size?: 'sm' | 'default' | 'icon' | 'lg'
+    className?: string
     variant: 'outline' | 'default'
     pendingText: string
     defaultText: string
@@ -11,7 +13,13 @@ export function FormButton(props: {
 }) {
     const { pending } = useFormStatus()
     return (
-        <Button variant={props.variant} type="submit" disabled={pending || props.isPending}>
+        <Button
+            variant={props.variant}
+            size={props.size}
+            type="submit"
+            disabled={pending || props.isPending}
+            className={props.className}
+        >
             {pending || props.isPending ? props.pendingText : props.defaultText}
         </Button>
     )

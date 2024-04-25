@@ -12,41 +12,37 @@ import {
     FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { SignUpSchema } from '@/lib/schemas'
-import { signUpAction } from '@/server/actions/auth.actions'
+import { SignInSchema } from '@/lib/schemas'
+import { signInAction } from '@/server/actions/auth.actions'
 import { toast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { FormButton } from '@/components/FormButton'
-import { Button } from '@/components/ui/button'
+import { useState } from 'react'
 
-export function SignUpForm() {
+export function SignInForm() {
     const [isPending, setIsPending] = useState(false)
     const router = useRouter()
-
-    const form = useForm<z.infer<typeof SignUpSchema>>({
-        resolver: zodResolver(SignUpSchema),
+    const form = useForm<z.infer<typeof SignInSchema>>({
+        resolver: zodResolver(SignInSchema),
         defaultValues: {
             username: '',
-            email: '',
             password: '',
-            confirmPassword: '',
         },
     })
 
-    async function onSubmit(values: z.infer<typeof SignUpSchema>) {
+    async function onSubmit(values: z.infer<typeof SignInSchema>) {
         setIsPending(true)
-        const res = await signUpAction(values)
+        const res = await signInAction(values)
         if (res.error) {
-            setIsPending(false)
             toast({
                 variant: 'destructive',
                 description: res.error,
             })
-        } else if (res.data) {
+            setIsPending(false)
+        } else if (res.success) {
             toast({
                 variant: 'default',
-                description: 'Account created successfully',
+                description: 'Login realizado com sucesso.',
             })
             setTimeout(() => {
                 setIsPending(false)
@@ -54,13 +50,10 @@ export function SignUpForm() {
             }, 5000)
         }
     }
+
     return (
         <Form {...form}>
-            <form
-                autoComplete="off"
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="flex flex-col gap-4"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
                 <FormField
                     control={form.control}
                     name="username"
@@ -69,33 +62,15 @@ export function SignUpForm() {
                             <FormLabel>Nome de usuário</FormLabel>
                             <FormControl>
                                 <Input
-                                    autoComplete="off"
                                     placeholder="Alguém"
+                                    autoComplete="username"
                                     {...field}
                                 />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
-                />
-                <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                                <Input
-                                    autoComplete="off"
-                                    type="email"
-                                    placeholder="seuemail@dominio.com"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                />{' '}
                 <FormField
                     control={form.control}
                     name="password"
@@ -114,29 +89,12 @@ export function SignUpForm() {
                         </FormItem>
                     )}
                 />
-                <FormField
-                    control={form.control}
-                    name="confirmPassword"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Confirme a senha</FormLabel>
-                            <FormControl>
-                                <Input
-                                    placeholder="*****"
-                                    type="password"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
                 <FormButton
                     isPending={isPending}
                     variant="default"
-                    defaultText="Realizar cadastro"
+                    defaultText="Login"
                     pendingText="Aguarde..."
-                    className="mt-4 w-full"
+                    className="mt-4"
                 />
             </form>
         </Form>
