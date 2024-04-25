@@ -134,7 +134,22 @@ export const signOutAction = async () => {
         )
     } catch (error: any) {
         return {
-            error: error?.message,
+            error: error?.message as string,
+        }
+    }
+}
+
+export const whoAmIAction = async () => {
+    console.log('whoAmIAction')
+    try {
+        const { user } = await authedRequest()
+
+        return {
+            user
+        }
+    } catch (error: any) {
+        return {
+            error: error?.message as string,
         }
     }
 }

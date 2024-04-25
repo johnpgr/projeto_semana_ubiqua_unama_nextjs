@@ -10,6 +10,7 @@ export function FormButton(props: {
     pendingText: string
     defaultText: string
     isPending?: boolean
+    disabled?: boolean
 }) {
     const { pending } = useFormStatus()
     return (
@@ -17,7 +18,7 @@ export function FormButton(props: {
             variant={props.variant}
             size={props.size}
             type="submit"
-            disabled={pending || props.isPending}
+            disabled={props.disabled || pending || props.isPending}
             className={props.className}
         >
             {pending || props.isPending ? props.pendingText : props.defaultText}

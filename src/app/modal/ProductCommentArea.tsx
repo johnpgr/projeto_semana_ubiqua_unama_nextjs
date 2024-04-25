@@ -7,9 +7,12 @@ import { z } from 'zod'
 import { NewCommentSchema } from '@/lib/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { commentAction } from '@/server/actions/comments.actions'
-import { toast } from '@/components/ui/use-toast'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { FormButton } from '@/components/FormButton'
+import { useAuth } from '@/lib/auth.client'
+import { ToastAction } from '@/components/ui/toast'
+import Link from 'next/link'
+import { toast } from '@/components/ui/use-toast'
 
 export function ProductCommentArea(props: { productId: string }) {
     const [isPending, setIsPending] = React.useState(false)
@@ -28,7 +31,12 @@ export function ProductCommentArea(props: { productId: string }) {
         if (res.error) {
             toast({
                 variant: 'destructive',
-                description: res.error
+                description: res.error,
+                action: <ToastAction altText="fazer login">
+                    <Link href="/signin">
+                        Fazer login
+                    </Link>
+                </ToastAction>
             })
             setIsPending(false)
         } else if (res.success) {

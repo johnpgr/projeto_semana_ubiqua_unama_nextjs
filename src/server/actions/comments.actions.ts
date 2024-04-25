@@ -13,7 +13,7 @@ export async function commentAction(values: {
     const { user } = await authedRequest()
     if (!user) {
         return {
-            error: 'Unauthorized'
+            error: 'Faça login para poder publicar comentários'
         }
     }
 
