@@ -1,16 +1,12 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { db } from '@/server/db'
 import { CommentSelect } from '@/server/db/schema'
+import { getUserById } from '@/server/queries/users.queries'
 import React from 'react'
 
 export async function ProductComment(props: {
     comment: Pick<CommentSelect, "content" | "userId" | "createdAt">
 }) {
-    const user = await db.query.users.findFirst({
-        where: ({ id }, { eq }) => eq(id, props.comment.userId)
-    })
-
-    if(!user) return null
+    const user = await React.cache(getUserById)(props.comment.userId)
+    if (!user) return null
 
     return (
         <div className="flex gap-4 p-2 border-t last:border-b last:pb-6">

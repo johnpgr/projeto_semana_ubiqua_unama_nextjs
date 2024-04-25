@@ -8,6 +8,9 @@ export const users = sqliteTable('user', {
     hashedPassword: text('hashed_password'),
 })
 
+export type UserSelect = typeof users.$inferSelect
+export type UserInsert = typeof users.$inferInsert
+
 export const sessions = sqliteTable('session', {
     id: text('id').notNull().primaryKey(),
     userId: text('user_id')
