@@ -7,7 +7,7 @@ import { users } from '@/server/db/schema'
 import { lucia, authedRequest } from '@/server/auth'
 import { cookies } from 'next/headers'
 import { eq } from 'drizzle-orm'
-import * as argon2 from 'argon2'
+import { hash, compare } from '@node-rs/bcrypt'
 import { SESSION_DURATION_SECONDS } from '@/consts'
 
 export const signUpAction = async (values: {
@@ -21,7 +21,7 @@ export const signUpAction = async (values: {
             error: res.error.message,
         }
     }
-    const hashedPassword = await argon2.hash(values.password)
+    const hashedPassword = await hash(values.password)
     const userId = generateId(24)
 
     try {
@@ -29,7 +29,7 @@ export const signUpAction = async (values: {
             .insert(users)
             .values({
                 id: userId,
-				email: values.email,
+                email: values.email,
                 username: values.username,
                 hashedPassword,
             })
@@ -83,7 +83,7 @@ export const signInAction = async (values: {
         }
     }
 
-    const passwordMatches = await argon2.verify(
+    const passwordMatches = await compare(
         existingUser.hashedPassword,
         values.password,
     )
